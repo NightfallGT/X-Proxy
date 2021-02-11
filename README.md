@@ -6,8 +6,6 @@ Proxy scraper and checker. Scrapes from 40+ sources.
 ## Picture
 ![Picture1](https://i.ibb.co/NytCrmS/Screenshot-133.png)
 
-With threading (500 threads) 
-
 
 ### Install
 

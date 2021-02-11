@@ -12,6 +12,7 @@ class UI:
     @staticmethod
     def banner():
         banner = f'''
+    {Fore.LIGHTBLACK_EX}discord.gg/e8Qy8JKbUK{Style.RESET_ALL}
     \t\t\t    ██╗  ██╗     ██████╗ ██████╗  ██████╗ ██╗  ██╗██╗   ██╗
     \t\t\t    ╚██╗██╔╝     ██╔══██╗██╔══██╗██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝
     \t\t\t     ╚███╔╝█████╗██████╔╝██████╔╝██║   ██║ ╚███╔╝  ╚████╔╝ 
@@ -28,16 +29,6 @@ class UI:
         [{Fore.RED}1{Style.RESET_ALL}] Proxy Scrape
         [{Fore.RED}2{Style.RESET_ALL}] Proxy Check
         [{Fore.RED}3{Style.RESET_ALL}] Exit
-        '''
-        return menu
-
-    @staticmethod
-    def menu2():
-        menu = f'''
-        Select proxy check method.
-        [{Fore.RED}1{Style.RESET_ALL}] Standard
-        [{Fore.RED}2{Style.RESET_ALL}] Proxy Judge
-        [{Fore.RED}3{Style.RESET_ALL}] Back
         '''
         return menu
 
@@ -194,14 +185,29 @@ class ProxyCheck(XProxy):
         for x in list_:
             c = self.checker.check_proxy(x)
             if c:
-                write(Fore.GREEN + '[ALIVE] '+ x + ' | ' + c['anonymity'] + ' | ' + 'Timeout:'+ str(c['timeout']) + ' ' +c['country_code'] + Style.RESET_ALL + c['protocols'][0])
-                with open('alive_checked.txt', 'a', encoding='UTF-8') as f:
+                write(Fore.GREEN + '[ALIVE] '+ x + ' | ' + c['anonymity'] + ' | ' + 'Timeout:'+ str(c['timeout']) + ' ' +c['country_code'] + Style.RESET_ALL + ' ' +  c['protocols'][0])
+                with open('all_alive.txt', 'a', encoding='UTF-8') as f:
                     f.write(x + '\n')
+
+                if c['protocols'][0] == 'http':
+                    with open('http_alive.txt', 'a', encoding='UTF-8') as f:
+                        f.write(x + '\n')                    
+
+                elif c['protocols'][0] == 'socks4':
+                    with open('socks4_alive.txt', 'a', encoding='UTF-8') as f:
+                        f.write(x + '\n')     
+
+                elif c['protocols'][0] == 'socks5':
+                    with open('socks5_alive.txt', 'a', encoding='UTF-8') as f:
+                        f.write(x + '\n')   
+                else:
+                    pass
+
                 self.checked_counter += 1
    
             else:
                 write(Fore.RED + '[DEAD] ' + x + Style.RESET_ALL)
-                with open('dead_checked.txt', 'a', encoding='UTF-8') as f:
+                with open('dead_proxies.txt', 'a', encoding='UTF-8') as f:
                     f.write(x + '\n')
                 self.checked_counter += 1
 
@@ -247,7 +253,11 @@ def main():
 
             path = input('Path: ')
 
-            new_path = path.replace('"','')
+            if '"' in path:
+                new_path = path.replace('"','')
+
+            else:
+                new_path = path
 
             proxy_list = pc.file_read(new_path)
 
